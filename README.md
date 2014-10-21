@@ -1,7 +1,7 @@
 PrismaPuzzleTimer
 =================
 
-克隆PrismaPuzzleTimer0.6版本，重构为Maven项目。
+克隆PrismaPuzzleTimer0.6版本，重构为Maven项目。此0.6版本标记为tag:v0.6了。
 
 Prisma Puzzle Timer的官方发布帖是http://www.speedsolving.com/forum/showthread.php?25790-Puzzle-Timer
 原作者的项目开源在https://bitbucket.org/walter/puzzle-timer 。
