@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.puzzletimer</groupId>
+    <artifactId>PrismaPuzzleTimer</artifactId>
+    <version>0.6</version>
+    <packaging>jar</packaging>
+    <licenses>
+        <license>
+            <name>Walter Souza's License</name>
+            <url>https://bitbucket.org/walter/puzzle-timer/raw/b0ac1ea63bd34cde4358dd65efb96b7b169d127b/LICENSE.txt</url>
+            <distribution>manual</distribution>
+            <comments>License of Prisma Puzzle Timer 0.6</comments>
+        </license>
+    </licenses>
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.2.137</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.chameleon.commons.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>3.7.3.1-0000</version>
+        </dependency>
+    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+</project>
