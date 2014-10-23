@@ -1,6 +1,6 @@
 package com.puzzletimer.gui;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -69,7 +69,7 @@ class CategoryEditorDialog extends JDialog {
             final CategoryEditorListener listener) {
         super(owner, modal);
 
-        setTitle(_("category_editor.category_editor"));
+        setTitle(translate("category_editor.category_editor"));
         setMinimumSize(new Dimension(480, 300));
         setPreferredSize(getMinimumSize());
 
@@ -279,32 +279,32 @@ class CategoryEditorDialog extends JDialog {
                 "[pref!][fill][pref!]",
                 "[pref!]8[pref!]8[pref!]8[pref!][grow]16[pref!]"));
 
-        add(new JLabel(_("category_editor.description")));
+        add(new JLabel(translate("category_editor.description")));
 
         // textFieldDescription
         this.textFieldDescription = new JTextField();
         add(this.textFieldDescription, "span 2, wrap");
 
-        add(new JLabel(_("category_editor.puzzle")));
+        add(new JLabel(translate("category_editor.puzzle")));
 
         // comboBoxPuzzle
         this.comboBoxPuzzle = new JComboBox();
         add(this.comboBoxPuzzle, "span 2, wrap");
 
-        add(new JLabel(_("category_editor.scrambler")));
+        add(new JLabel(translate("category_editor.scrambler")));
 
         // comboBoxScrambler
         this.comboBoxScrambler = new JComboBox();
         add(this.comboBoxScrambler, "span 2, wrap");
 
-        add(new JLabel(_("category_editor.tips")));
+        add(new JLabel(translate("category_editor.tips")));
 
         // comboBoxTips
         this.comboBoxTips = new JComboBox();
         add(this.comboBoxTips);
 
         // buttonAdd
-        this.buttonAdd = new JButton(_("category_editor.add"));
+        this.buttonAdd = new JButton(translate("category_editor.add"));
         add(this.buttonAdd, "sizegroup button, wrap");
 
         // listTips
@@ -314,23 +314,23 @@ class CategoryEditorDialog extends JDialog {
         add(scrollPane, "grow, skip");
 
         // buttonUp
-        this.buttonUp = new JButton(_("category_editor.up"));
+        this.buttonUp = new JButton(translate("category_editor.up"));
         add(this.buttonUp, "sizegroup button, top, split 3, flowy");
 
         // buttonDown
-        this.buttonDown = new JButton(_("category_editor.down"));
+        this.buttonDown = new JButton(translate("category_editor.down"));
         add(this.buttonDown, "sizegroup button");
 
         // buttonRemove
-        this.buttonRemove = new JButton(_("category_editor.remove"));
+        this.buttonRemove = new JButton(translate("category_editor.remove"));
         add(this.buttonRemove, "sizegroup button, wrap");
 
         // buttonOk
-        this.buttonOk = new JButton(_("category_editor.ok"));
+        this.buttonOk = new JButton(translate("category_editor.ok"));
         add(this.buttonOk, "tag ok, span 3, split");
 
         // buttonCancel
-        this.buttonCancel = new JButton(_("category_editor.cancel"));
+        this.buttonCancel = new JButton(translate("category_editor.cancel"));
         add(this.buttonCancel, "tag cancel");
     }
 }
@@ -348,7 +348,7 @@ public class CategoryManagerFrame extends JFrame {
             final ScramblerProvider scramblerProvider,
             final CategoryManager categoryManager,
             final TipProvider tipProvider) {
-        setTitle(_("category_manager.category_manager"));
+        setTitle(translate("category_manager.category_manager"));
         setMinimumSize(new Dimension(640, 480));
         setPreferredSize(getMinimumSize());
 
@@ -364,9 +364,9 @@ public class CategoryManagerFrame extends JFrame {
                         return false;
                     }
                 };
-                tableModel.addColumn(_("category_manager.description"));
-                tableModel.addColumn(_("category_manager.puzzle"));
-                tableModel.addColumn(_("category_manager.scrambler"));
+                tableModel.addColumn(translate("category_manager.description"));
+                tableModel.addColumn(translate("category_manager.puzzle"));
+                tableModel.addColumn(translate("category_manager.scrambler"));
 
                 for (Category category : categories) {
                     ScramblerInfo scramblerInfo =
@@ -414,7 +414,7 @@ public class CategoryManagerFrame extends JFrame {
                 Category category = new Category(
                     UUID.randomUUID(),
                     "RUBIKS-CUBE-RANDOM",
-                    _("category_manager.new_category"),
+                    translate("category_manager.new_category"),
                     true,
                     new String[0]);
 
@@ -473,8 +473,8 @@ public class CategoryManagerFrame extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 int result = JOptionPane.showConfirmDialog(
                     CategoryManagerFrame.this,
-                    _("category_manager.category_removal_confirmation_message"),
-                    _("category_manager.remove_category"),
+                    translate("category_manager.category_removal_confirmation_message"),
+                    translate("category_manager.remove_category"),
                     JOptionPane.YES_NO_CANCEL_OPTION);
                 if (result != JOptionPane.YES_OPTION) {
                     return;
@@ -510,7 +510,7 @@ public class CategoryManagerFrame extends JFrame {
         setLayout(new MigLayout("fill", "[grow][pref!]", "[pref!]8[grow]16[pref!]"));
 
         // labelCategories
-        JLabel labelCategories = new JLabel(_("category_manager.categories"));
+        JLabel labelCategories = new JLabel(translate("category_manager.categories"));
         add(labelCategories, "span 2, wrap");
 
         // table
@@ -523,21 +523,21 @@ public class CategoryManagerFrame extends JFrame {
         add(scrollPane, "grow");
 
         // buttonAdd
-        this.buttonAdd = new JButton(_("category_manager.add"));
+        this.buttonAdd = new JButton(translate("category_manager.add"));
         add(this.buttonAdd, "top, growx, split, flowy");
 
         // buttonEdit
-        this.buttonEdit = new JButton(_("category_manager.edit"));
+        this.buttonEdit = new JButton(translate("category_manager.edit"));
         this.buttonEdit.setEnabled(false);
         add(this.buttonEdit, "growx");
 
         // buttonRemove
-        this.buttonRemove = new JButton(_("category_manager.remove"));
+        this.buttonRemove = new JButton(translate("category_manager.remove"));
         this.buttonRemove.setEnabled(false);
         add(this.buttonRemove, "growx, wrap");
 
         // buttonOk
-        this.buttonOk = new JButton(_("category_manager.ok"));
+        this.buttonOk = new JButton(translate("category_manager.ok"));
         add(this.buttonOk, "tag ok, span 2");
     }
 }

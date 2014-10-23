@@ -9,7 +9,7 @@ public class Internationalization {
         resourceBundle = ResourceBundle.getBundle("i18n.messages");
     }
 
-    public static String _(String key) {
+    public static String translate(String key) {
         if (resourceBundle.containsKey(key)) {
             return resourceBundle.getString(key);
         }

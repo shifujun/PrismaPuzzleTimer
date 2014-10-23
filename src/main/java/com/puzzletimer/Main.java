@@ -1,6 +1,6 @@
 package com.puzzletimer;
 
-import static com.puzzletimer.Internationalization.*;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -54,6 +54,7 @@ import com.puzzletimer.tips.TipProvider;
 import com.puzzletimer.util.SolutionUtils;
 
 public class Main {
+
     private ConfigurationDAO configurationDAO;
     private ColorDAO colorDAO;
     private CategoryDAO categoryDAO;
@@ -61,12 +62,12 @@ public class Main {
 
     private MessageManager messageManager;
     private ConfigurationManager configurationManager;
-    private TimerManager timerManager;
-    private PuzzleProvider puzzleProvider;
-    private ColorManager colorManager;
-    private ScrambleParserProvider scrambleParserProvider;
-    private ScramblerProvider scramblerProvider;
-    private TipProvider tipProvider;
+    private final TimerManager timerManager;
+    private final PuzzleProvider puzzleProvider;
+    private final ColorManager colorManager;
+    private final ScrambleParserProvider scrambleParserProvider;
+    private final ScramblerProvider scramblerProvider;
+    private final TipProvider tipProvider;
     private CategoryManager categoryManager;
     private ScrambleManager scrambleManager;
     private SolutionManager solutionManager;
@@ -79,10 +80,10 @@ public class Main {
         } catch (ClassNotFoundException e) {
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(
-                frame,
-                _("main.database_driver_load_error"),
-                _("main.prisma_puzzle_timer"),
-                JOptionPane.ERROR_MESSAGE);
+                    frame,
+                    translate("main.database_driver_load_error"),
+                    translate("main.prisma_puzzle_timer"),
+                    JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
 
@@ -92,17 +93,17 @@ public class Main {
             try {
                 Connection connection = DriverManager.getConnection("jdbc:h2:puzzletimer", "sa", "");
                 Reader script = new InputStreamReader(
-                    getClass().getResourceAsStream(
-                        "/database/puzzletimer0.3.sql"));
+                        getClass().getResourceAsStream(
+                                "/database/puzzletimer0.3.sql"));
                 RunScript.execute(connection, script);
                 connection.close();
             } catch (SQLException e) {
                 JFrame frame = new JFrame();
                 JOptionPane.showMessageDialog(
-                    frame,
-                    String.format(_("main.database_error_message"), e.getMessage()),
-                    _("main.prisma_puzzle_timer"),
-                    JOptionPane.ERROR_MESSAGE);
+                        frame,
+                        String.format(translate("main.database_error_message"), e.getMessage()),
+                        translate("main.prisma_puzzle_timer"),
+                        JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
         }
@@ -114,22 +115,22 @@ public class Main {
         } catch (SQLException e) {
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(
-                frame,
-                _("main.concurrent_database_access_error_message"),
-                _("main.prisma_puzzle_timer"),
-                JOptionPane.ERROR_MESSAGE);
+                    frame,
+                    translate("main.concurrent_database_access_error_message"),
+                    translate("main.prisma_puzzle_timer"),
+                    JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
 
         // update database if necessary
-        String[] versions = { "0.3", "0.4", "0.5" };
+        String[] versions = {"0.3", "0.4", "0.5"};
 
         for (;;) {
             String currentVersion = "";
             try {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(
-                    "SELECT VALUE FROM CONFIGURATION WHERE KEY = 'VERSION'");
+                        "SELECT VALUE FROM CONFIGURATION WHERE KEY = 'VERSION'");
                 while (resultSet.next()) {
                     currentVersion = resultSet.getString(1);
                 }
@@ -144,16 +145,16 @@ public class Main {
             try {
                 String scriptName = "puzzletimer" + versions[versionIndex + 1] + ".sql";
                 Reader script = new InputStreamReader(
-                    getClass().getResourceAsStream(
-                        "/database/" + scriptName));
+                        getClass().getResourceAsStream(
+                                "/database/" + scriptName));
                 RunScript.execute(connection, script);
             } catch (SQLException e) {
                 JFrame frame = new JFrame();
                 JOptionPane.showMessageDialog(
-                    frame,
-                    String.format(_("main.database_error_message"), e.getMessage()),
-                    _("main.prisma_puzzle_timer"),
-                    JOptionPane.ERROR_MESSAGE);
+                        frame,
+                        String.format(translate("main.database_error_message"), e.getMessage()),
+                        translate("main.prisma_puzzle_timer"),
+                        JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
         }
@@ -171,11 +172,11 @@ public class Main {
             public void configurationEntryUpdated(String key, String value) {
                 try {
                     Main.this.configurationDAO.update(
-                        new ConfigurationEntry(key, value));
+                            new ConfigurationEntry(key, value));
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
         });
@@ -183,18 +184,18 @@ public class Main {
         // timer manager
         this.timerManager = new TimerManager();
         this.timerManager.setInspectionEnabled(
-            this.configurationManager.getConfiguration("INSPECTION-TIME-ENABLED").equals("TRUE"));
+                this.configurationManager.getConfiguration("INSPECTION-TIME-ENABLED").equals("TRUE"));
         this.timerManager.addListener(new TimerManager.Listener() {
             @Override
             public void solutionFinished(Timing timing, String penalty) {
                 // add solution
                 Main.this.solutionManager.addSolution(
-                    new Solution(
-                        UUID.randomUUID(),
-                        Main.this.categoryManager.getCurrentCategory().getCategoryId(),
-                        Main.this.scrambleManager.getCurrentScramble(),
-                        timing,
-                        penalty));
+                        new Solution(
+                                UUID.randomUUID(),
+                                Main.this.categoryManager.getCurrentCategory().getCategoryId(),
+                                Main.this.scrambleManager.getCurrentScramble(),
+                                timing,
+                                penalty));
 
                 // check for personal records
                 StatisticalMeasure[] measures = {
@@ -202,16 +203,14 @@ public class Main {
                     new BestMean(3, 3),
                     new BestMean(100, 100),
                     new BestAverage(5, 5),
-                    new BestAverage(12, 12),
-                };
+                    new BestAverage(12, 12),};
 
                 String[] descriptions = {
-                    _("main.single"),
-                    _("main.mean_of_3"),
-                    _("main.mean_of_100"),
-                    _("main.average_of_5"),
-                    _("main.average_of_12"),
-                };
+                    translate("main.single"),
+                    translate("main.mean_of_3"),
+                    translate("main.mean_of_100"),
+                    translate("main.average_of_5"),
+                    translate("main.average_of_12"),};
 
                 Solution[] solutions = Main.this.solutionManager.getSolutions();
                 Solution[] sessionSolutions = Main.this.sessionManager.getSolutions();
@@ -229,11 +228,11 @@ public class Main {
 
                     if (measures[i].getWindowPosition() == 0 && sessionBest <= allTimeBest) {
                         Main.this.messageManager.enqueueMessage(
-                            MessageType.INFORMATION,
-                            String.format(_("main.personal_record_message"),
-                                Main.this.categoryManager.getCurrentCategory().getDescription(),
-                                SolutionUtils.formatMinutes(measures[i].getValue()),
-                                descriptions[i]));
+                                MessageType.INFORMATION,
+                                String.format(translate("main.personal_record_message"),
+                                        Main.this.categoryManager.getCurrentCategory().getDescription(),
+                                        SolutionUtils.formatMinutes(measures[i].getValue()),
+                                        descriptions[i]));
                     }
                 }
 
@@ -244,13 +243,13 @@ public class Main {
             @Override
             public void timerChanged(Timer timer) {
                 Main.this.configurationManager.setConfiguration(
-                    "TIMER-TRIGGER", timer.getTimerId());
+                        "TIMER-TRIGGER", timer.getTimerId());
             }
 
             @Override
             public void inspectionEnabledSet(boolean inspectionEnabled) {
                 Main.this.configurationManager.setConfiguration(
-                    "INSPECTION-TIME-ENABLED", inspectionEnabled ? "TRUE" : "FALSE");
+                        "INSPECTION-TIME-ENABLED", inspectionEnabled ? "TRUE" : "FALSE");
             }
         });
 
@@ -269,8 +268,8 @@ public class Main {
                     Main.this.colorDAO.update(colorScheme);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
         });
@@ -280,7 +279,6 @@ public class Main {
 
         // scrambler provider
         this.scramblerProvider = new ScramblerProvider();
-
 
         // tip provider
         this.tipProvider = new TipProvider();
@@ -292,7 +290,7 @@ public class Main {
         Category[] categories = this.categoryDAO.getAll();
 
         UUID currentCategoryId = UUID.fromString(
-            this.configurationManager.getConfiguration("CURRENT-CATEGORY"));
+                this.configurationManager.getConfiguration("CURRENT-CATEGORY"));
         Category currentCategory = null;
         for (Category category : categories) {
             if (category.getCategoryId().equals(currentCategoryId)) {
@@ -305,17 +303,17 @@ public class Main {
             @Override
             public void currentCategoryChanged(Category category) {
                 Main.this.configurationManager.setConfiguration(
-                    "CURRENT-CATEGORY",
-                    category.getCategoryId().toString());
+                        "CURRENT-CATEGORY",
+                        category.getCategoryId().toString());
 
                 try {
                     Main.this.solutionManager.loadSolutions(
-                        Main.this.solutionDAO.getAll(category));
+                            Main.this.solutionDAO.getAll(category));
                     Main.this.sessionManager.clearSession();
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
 
@@ -325,8 +323,8 @@ public class Main {
                     Main.this.categoryDAO.insert(category);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
 
@@ -336,8 +334,8 @@ public class Main {
                     Main.this.categoryDAO.delete(category);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
 
@@ -347,16 +345,16 @@ public class Main {
                     Main.this.categoryDAO.update(category);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
         });
 
         // scramble manager
         this.scrambleManager = new ScrambleManager(
-            this.scramblerProvider,
-            this.scramblerProvider.get(currentCategory.getScramblerId()));
+                this.scramblerProvider,
+                this.scramblerProvider.get(currentCategory.getScramblerId()));
         this.categoryManager.addListener(new CategoryManager.Listener() {
             @Override
             public void currentCategoryChanged(Category category) {
@@ -378,8 +376,8 @@ public class Main {
                     Main.this.solutionDAO.insert(solution);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
 
@@ -389,8 +387,8 @@ public class Main {
                     Main.this.solutionDAO.insert(solutions);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
 
@@ -402,8 +400,8 @@ public class Main {
                     Main.this.solutionDAO.update(solution);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
 
@@ -415,8 +413,8 @@ public class Main {
                     Main.this.solutionDAO.delete(solution);
                 } catch (DatabaseException e) {
                     Main.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        String.format(_("main.database_error_message"), e.getMessage()));
+                            MessageType.ERROR,
+                            String.format(translate("main.database_error_message"), e.getMessage()));
                 }
             }
         });
@@ -427,10 +425,11 @@ public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e){
+                } catch (Exception e) {
                 }
 
                 Main main = new Main();
@@ -439,18 +438,18 @@ public class Main {
 
                 // main frame
                 MainFrame mainFrame = new MainFrame(
-                    main.messageManager,
-                    main.configurationManager,
-                    main.timerManager,
-                    main.puzzleProvider,
-                    main.colorManager,
-                    main.scrambleParserProvider,
-                    main.scramblerProvider,
-                    main.tipProvider,
-                    main.categoryManager,
-                    main.scrambleManager,
-                    main.solutionManager,
-                    main.sessionManager);
+                        main.messageManager,
+                        main.configurationManager,
+                        main.timerManager,
+                        main.puzzleProvider,
+                        main.colorManager,
+                        main.scrambleParserProvider,
+                        main.scramblerProvider,
+                        main.tipProvider,
+                        main.categoryManager,
+                        main.scrambleManager,
+                        main.solutionManager,
+                        main.sessionManager);
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 mainFrame.setLocationRelativeTo(null);
                 mainFrame.setIconImage(icon);

@@ -1,6 +1,6 @@
 package com.puzzletimer.tips;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class RubiksCubeClassicPochmannCorners implements Tip {
 
     @Override
     public String getTipDescription() {
-        return _("tip.RUBIKS-CUBE-CLASSIC-POCHMANN-CORNERS");
+        return translate("tip.RUBIKS-CUBE-CLASSIC-POCHMANN-CORNERS");
     }
 
     @Override
@@ -91,7 +91,7 @@ public class RubiksCubeClassicPochmannCorners implements Tip {
         // solution
         StringBuilder tip = new StringBuilder();
 
-        tip.append(_("tip.RUBIKS-CUBE-CLASSIC-POCHMANN-CORNERS") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-CLASSIC-POCHMANN-CORNERS") + ":\n");
         tip.append("  [Y]  R U' R' U' R U R' F' R U R' U' R' F R\n");
         tip.append("\n");
 

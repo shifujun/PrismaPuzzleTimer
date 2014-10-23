@@ -18,6 +18,10 @@ public class ScrambleManager {
     private ArrayList<Listener> listeners;
     private ScramblerProvider scramblerProvider;
     private Scrambler currentScrambler;
+
+    public Scrambler getCurrentScrambler() {
+        return currentScrambler;
+    }
     private ArrayList<Scramble> queue;
     private Scramble currentScramble;
 

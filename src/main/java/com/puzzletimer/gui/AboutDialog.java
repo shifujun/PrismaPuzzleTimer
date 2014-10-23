@@ -1,6 +1,6 @@
 package com.puzzletimer.gui;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,7 +23,7 @@ public class AboutDialog extends JDialog {
     public AboutDialog(JFrame owner, boolean modal) {
         super(owner, modal);
 
-        setTitle(_("about.prisma_puzzle_timer_version"));
+        setTitle(translate("about.prisma_puzzle_timer_version"));
         setResizable(false);
 
         createComponents();
@@ -53,16 +53,16 @@ public class AboutDialog extends JDialog {
         add(panel3D, "width 125, height 125, spany");
 
         // labelPrismaPuzzleTimer
-        JLabel labelPrismaPuzzleTimer = new JLabel(_("about.prisma_puzzle_timer_version"));
+        JLabel labelPrismaPuzzleTimer = new JLabel(translate("about.prisma_puzzle_timer_version"));
         labelPrismaPuzzleTimer.setFont(new Font("Arial", Font.BOLD, 16));
         add(labelPrismaPuzzleTimer, "split 3, gapbottom 10, flowy");
 
         // labelURL
-        JLabel labelURL = new JLabel(_("about.prisma_puzzle_timer_address"));
+        JLabel labelURL = new JLabel(translate("about.prisma_puzzle_timer_address"));
         add(labelURL);
 
         // labelWalter
-        JLabel labelWalter = new JLabel(_("about.walters_email"));
+        JLabel labelWalter = new JLabel(translate("about.walters_email"));
         add(labelWalter);
     }
 }

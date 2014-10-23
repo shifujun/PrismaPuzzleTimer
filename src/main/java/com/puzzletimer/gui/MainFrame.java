@@ -1,47 +1,6 @@
 package com.puzzletimer.gui;
 
-import static com.puzzletimer.Internationalization._;
-
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.DataLine.Info;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-
-import net.miginfocom.swing.MigLayout;
-
+import static com.puzzletimer.Internationalization.translate;
 import com.puzzletimer.graphics.Panel3D;
 import com.puzzletimer.gui.SolutionEditingDialog.SolutionEditingDialogListener;
 import com.puzzletimer.models.Category;
@@ -58,11 +17,11 @@ import com.puzzletimer.state.CategoryManager;
 import com.puzzletimer.state.ColorManager;
 import com.puzzletimer.state.ConfigurationManager;
 import com.puzzletimer.state.MessageManager;
+import com.puzzletimer.state.MessageManager.MessageType;
 import com.puzzletimer.state.ScrambleManager;
 import com.puzzletimer.state.SessionManager;
 import com.puzzletimer.state.SolutionManager;
 import com.puzzletimer.state.TimerManager;
-import com.puzzletimer.state.MessageManager.MessageType;
 import com.puzzletimer.statistics.Average;
 import com.puzzletimer.statistics.Best;
 import com.puzzletimer.statistics.BestAverage;
@@ -77,19 +36,61 @@ import com.puzzletimer.timer.SpaceKeyTimer;
 import com.puzzletimer.timer.StackmatTimer;
 import com.puzzletimer.tips.TipProvider;
 import com.puzzletimer.util.SolutionUtils;
-
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.UUID;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine.Info;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.TargetDataLine;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
+
     private class ScramblePanel extends JPanel {
+
         private ScrambleViewerPanel scrambleViewerPanel;
+        private ScrambleManager scrambleManager;
 
         public ScramblePanel(ScrambleManager scrambleManager) {
+            this.scrambleManager = scrambleManager;
             createComponents();
 
             scrambleManager.addListener(new ScrambleManager.Listener() {
                 @Override
                 public void scrambleChanged(Scramble scramble) {
+                    createComponents();
                     setScramble(scramble);
                 }
             });
@@ -100,7 +101,13 @@ public class MainFrame extends JFrame {
         }
 
         private void createComponents() {
-            setLayout(new WrapLayout(10, 3));
+            String puzzleId = scrambleManager.getCurrentScrambler().getScramblerInfo().getPuzzleId();
+            if (puzzleId.equals("MEGAMINX")) {
+                setLayout(new GridLayout(7, 11));
+            } else {
+                setLayout(new WrapLayout(10, 3));
+            }
+
         }
 
         private void setScramble(final Scramble scramble) {
@@ -109,7 +116,7 @@ public class MainFrame extends JFrame {
             final JLabel[] labels = new JLabel[scramble.getSequence().length];
             for (int i = 0; i < labels.length; i++) {
                 labels[i] = new JLabel(scramble.getSequence()[i]);
-                labels[i].setFont(new Font("Arial", Font.PLAIN, 18));
+                labels[i].setFont(new Font("Arial", Font.PLAIN, 28));
                 labels[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 
                 final int index = i;
@@ -118,13 +125,13 @@ public class MainFrame extends JFrame {
                     public void mouseClicked(MouseEvent e) {
                         for (int i = 0; i < labels.length; i++) {
                             labels[i].setForeground(
-                                i <= index ? Color.BLACK : Color.LIGHT_GRAY);
+                                    i <= index ? Color.BLACK : Color.LIGHT_GRAY);
                         }
 
                         ScramblePanel.this.scrambleViewerPanel.setScramble(
-                            new Scramble(
-                                scramble.getScramblerId(),
-                                Arrays.copyOf(scramble.getSequence(), index + 1)));
+                                new Scramble(
+                                        scramble.getScramblerId(),
+                                        Arrays.copyOf(scramble.getSequence(), index + 1)));
                     }
                 });
 
@@ -137,6 +144,7 @@ public class MainFrame extends JFrame {
     }
 
     private class TimerPanel extends JPanel {
+
         private HandImage leftHand;
         private TimeLabel timeLabel;
         private HandImage rightHand;
@@ -149,7 +157,7 @@ public class MainFrame extends JFrame {
                 public void timerReset() {
                     TimerPanel.this.timeLabel.setForeground(Color.BLACK);
                     TimerPanel.this.timeLabel.setText(
-                        SolutionUtils.formatMinutes(0));
+                            SolutionUtils.formatMinutes(0));
                 }
 
                 @Override
@@ -183,9 +191,9 @@ public class MainFrame extends JFrame {
                     } else if (remainingTime > 0) {
                         double x = remainingTime / 7000.0;
                         color = new Color(
-                            (int) (x * startColor.getRed()   + (1 - x) * endColor.getRed()),
-                            (int) (x * startColor.getGreen() + (1 - x) * endColor.getGreen()),
-                            (int) (x * startColor.getBlue()  + (1 - x) * endColor.getBlue()));
+                                (int) (x * startColor.getRed() + (1 - x) * endColor.getRed()),
+                                (int) (x * startColor.getGreen() + (1 - x) * endColor.getGreen()),
+                                (int) (x * startColor.getBlue() + (1 - x) * endColor.getBlue()));
                     } else {
                         color = endColor;
                         remainingTime = 0;
@@ -193,21 +201,21 @@ public class MainFrame extends JFrame {
 
                     TimerPanel.this.timeLabel.setForeground(color);
                     TimerPanel.this.timeLabel.setText(
-                        Long.toString((long)Math.ceil(remainingTime / 1000.0)));
+                            Long.toString((long) Math.ceil(remainingTime / 1000.0)));
                 }
 
                 @Override
                 public void solutionRunning(Timing timing) {
                     TimerPanel.this.timeLabel.setForeground(Color.BLACK);
                     TimerPanel.this.timeLabel.setText(
-                        SolutionUtils.formatMinutes(timing.getElapsedTime()));
+                            SolutionUtils.formatMinutes(timing.getElapsedTime()));
                 }
 
                 @Override
                 public void solutionFinished(Timing timing, String penalty) {
                     TimerPanel.this.timeLabel.setForeground(Color.BLACK);
                     TimerPanel.this.timeLabel.setText(
-                        SolutionUtils.formatMinutes(timing.getElapsedTime()));
+                            SolutionUtils.formatMinutes(timing.getElapsedTime()));
                 }
             });
         }
@@ -231,6 +239,7 @@ public class MainFrame extends JFrame {
     }
 
     private class TimesScrollPane extends JScrollPane {
+
         private SolutionManager solutionManager;
 
         private JPanel panel;
@@ -254,10 +263,10 @@ public class MainFrame extends JFrame {
 
             // panel
             this.panel = new JPanel(
-                new MigLayout(
-                    "center",
-                    "0[right]8[pref!]16[pref!]8[pref!]16[pref!]0",
-                    ""));
+                    new MigLayout(
+                            "center",
+                            "0[right]8[pref!]16[pref!]8[pref!]16[pref!]0",
+                            ""));
         }
 
         private void setSolutions(final Solution[] solutions) {
@@ -285,10 +294,10 @@ public class MainFrame extends JFrame {
                     public void mouseClicked(MouseEvent e) {
                         if (!solution.getPenalty().equals("+2")) {
                             TimesScrollPane.this.solutionManager.updateSolution(
-                                solution.setPenalty("+2"));
+                                    solution.setPenalty("+2"));
                         } else if (solution.getPenalty().equals("+2")) {
                             TimesScrollPane.this.solutionManager.updateSolution(
-                                solution.setPenalty(""));
+                                    solution.setPenalty(""));
                         }
                     }
                 });
@@ -305,10 +314,10 @@ public class MainFrame extends JFrame {
                     public void mouseClicked(MouseEvent e) {
                         if (!solution.getPenalty().equals("DNF")) {
                             TimesScrollPane.this.solutionManager.updateSolution(
-                                solution.setPenalty("DNF"));
+                                    solution.setPenalty("DNF"));
                         } else if (solution.getPenalty().equals("DNF")) {
                             TimesScrollPane.this.solutionManager.updateSolution(
-                                solution.setPenalty(""));
+                                    solution.setPenalty(""));
                         }
                     }
                 });
@@ -331,6 +340,7 @@ public class MainFrame extends JFrame {
     }
 
     private class StatisticsPanel extends JPanel {
+
         private JLabel labelMean;
         private JLabel labelAverage;
         private JLabel labelBestTime;
@@ -359,8 +369,7 @@ public class MainFrame extends JFrame {
                 this.labelAverageOf5,
                 this.labelBestAverageOf5,
                 this.labelAverageOf12,
-                this.labelBestAverageOf12,
-            };
+                this.labelBestAverageOf12,};
 
             final StatisticalMeasure[] measures = {
                 new Mean(1, Integer.MAX_VALUE),
@@ -374,8 +383,7 @@ public class MainFrame extends JFrame {
                 new Average(5, 5),
                 new BestAverage(5, Integer.MAX_VALUE),
                 new Average(12, 12),
-                new BestAverage(12, Integer.MAX_VALUE),
-            };
+                new BestAverage(12, Integer.MAX_VALUE),};
 
             sessionManager.addListener(new SessionManager.Listener() {
                 @Override
@@ -401,13 +409,13 @@ public class MainFrame extends JFrame {
 
         private void createComponents() {
             setLayout(
-                new MigLayout(
-                    "center",
-                    "[pref!,right]8[pref!]",
-                    "1[pref!]1[pref!]1[pref!]1[pref!]1[pref!]1[pref!]6[pref!]1[pref!]6[pref!]1[pref!]6[pref!]1[pref!]1"));
+                    new MigLayout(
+                            "center",
+                            "[pref!,right]8[pref!]",
+                            "1[pref!]1[pref!]1[pref!]1[pref!]1[pref!]1[pref!]6[pref!]1[pref!]6[pref!]1[pref!]6[pref!]1[pref!]1"));
 
             // labelMean
-            JLabel labelMeanDescription = new JLabel(_("statistics.mean"));
+            JLabel labelMeanDescription = new JLabel(translate("statistics.mean"));
             labelMeanDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelMeanDescription);
 
@@ -415,15 +423,15 @@ public class MainFrame extends JFrame {
             add(this.labelMean, "wrap");
 
             // labelAverage
-            JLabel labelAverageDescription = new JLabel(_("statistics.average"));
+            JLabel labelAverageDescription = new JLabel(translate("statistics.average"));
             labelAverageDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelAverageDescription);
 
-            this.labelAverage= new JLabel("XX:XX.XX");
+            this.labelAverage = new JLabel("XX:XX.XX");
             add(this.labelAverage, "wrap");
 
             // labelBestTime
-            JLabel labelBestTimeDescription = new JLabel(_("statistics.best_time"));
+            JLabel labelBestTimeDescription = new JLabel(translate("statistics.best_time"));
             labelBestTimeDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelBestTimeDescription);
 
@@ -431,7 +439,7 @@ public class MainFrame extends JFrame {
             add(this.labelBestTime, "wrap");
 
             // labelMedian
-            JLabel labelMedianDescription = new JLabel(_("statistics.median"));
+            JLabel labelMedianDescription = new JLabel(translate("statistics.median"));
             labelMedianDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelMedianDescription);
 
@@ -439,7 +447,7 @@ public class MainFrame extends JFrame {
             add(this.labelMedian, "wrap");
 
             // labelWorstTime
-            JLabel labelWorstTimeDescription = new JLabel(_("statistics.worst_time"));
+            JLabel labelWorstTimeDescription = new JLabel(translate("statistics.worst_time"));
             labelWorstTimeDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelWorstTimeDescription);
 
@@ -447,7 +455,7 @@ public class MainFrame extends JFrame {
             add(this.labelWorstTime, "wrap");
 
             // labelStandardDeviation
-            JLabel labelStandardDeviationDescription = new JLabel(_("statistics.standard_deviation"));
+            JLabel labelStandardDeviationDescription = new JLabel(translate("statistics.standard_deviation"));
             labelStandardDeviationDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelStandardDeviationDescription);
 
@@ -455,7 +463,7 @@ public class MainFrame extends JFrame {
             add(this.labelStandardDeviation, "wrap");
 
             // labelMeanOf3
-            JLabel labelMeanOf3Description = new JLabel(_("statistics.mean_of_3"));
+            JLabel labelMeanOf3Description = new JLabel(translate("statistics.mean_of_3"));
             labelMeanOf3Description.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelMeanOf3Description);
 
@@ -463,7 +471,7 @@ public class MainFrame extends JFrame {
             add(this.labelMeanOf3, "wrap");
 
             // labelBestMeanOf3
-            JLabel labelBestMeanOf3Description = new JLabel(_("statistics.best_mean_of_3"));
+            JLabel labelBestMeanOf3Description = new JLabel(translate("statistics.best_mean_of_3"));
             labelBestMeanOf3Description.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelBestMeanOf3Description);
 
@@ -471,7 +479,7 @@ public class MainFrame extends JFrame {
             add(this.labelBestMeanOf3, "wrap");
 
             // labelAverageOf5
-            JLabel labelAverageOf5Description = new JLabel(_("statistics.average_of_5"));
+            JLabel labelAverageOf5Description = new JLabel(translate("statistics.average_of_5"));
             labelAverageOf5Description.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelAverageOf5Description);
 
@@ -479,7 +487,7 @@ public class MainFrame extends JFrame {
             add(this.labelAverageOf5, "wrap");
 
             // labelBestAverageOf5
-            JLabel labelBestAverageOf5Description = new JLabel(_("statistics.best_average_of_5"));
+            JLabel labelBestAverageOf5Description = new JLabel(translate("statistics.best_average_of_5"));
             labelBestAverageOf5Description.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelBestAverageOf5Description);
 
@@ -487,7 +495,7 @@ public class MainFrame extends JFrame {
             add(this.labelBestAverageOf5, "wrap");
 
             // labelAverageOf12
-            JLabel labelAverageOf12Description = new JLabel(_("statistics.average_of_12"));
+            JLabel labelAverageOf12Description = new JLabel(translate("statistics.average_of_12"));
             labelAverageOf12Description.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelAverageOf12Description);
 
@@ -495,7 +503,7 @@ public class MainFrame extends JFrame {
             add(this.labelAverageOf12, "wrap");
 
             // labelBestAverageOf12
-            JLabel labelBestAverageOf12Description = new JLabel(_("statistics.best_average_of_12"));
+            JLabel labelBestAverageOf12Description = new JLabel(translate("statistics.best_average_of_12"));
             labelBestAverageOf12Description.setFont(new Font("Tahoma", Font.BOLD, 11));
             add(labelBestAverageOf12Description);
 
@@ -505,6 +513,7 @@ public class MainFrame extends JFrame {
     }
 
     private class ScrambleViewerPanel extends JPanel {
+
         private PuzzleProvider puzzleProvider;
         private ColorManager colorManager;
         private ScramblerProvider scramblerProvider;
@@ -593,7 +602,6 @@ public class MainFrame extends JFrame {
     private AudioFormat audioFormat;
     private Mixer.Info mixerInfo;
 
-
     public MainFrame(
             MessageManager messageManager,
             ConfigurationManager configurationManager,
@@ -629,8 +637,8 @@ public class MainFrame extends JFrame {
         this.audioFormat = new AudioFormat(8000, 8, 1, true, false);
         this.mixerInfo = null;
 
-        String stackmatTimerInputDeviceName =
-            this.configurationManager.getConfiguration("STACKMAT-TIMER-INPUT-DEVICE");
+        String stackmatTimerInputDeviceName
+                = this.configurationManager.getConfiguration("STACKMAT-TIMER-INPUT-DEVICE");
         for (Mixer.Info mixerInfo : AudioSystem.getMixerInfo()) {
             if (stackmatTimerInputDeviceName.equals(mixerInfo.getName())) {
                 this.mixerInfo = mixerInfo;
@@ -644,12 +652,12 @@ public class MainFrame extends JFrame {
         try {
             final Clip[] inspectionClips = new Clip[4];
 
-            String[] fileNames = { "eight_seconds.wav", "go.wav", "plus_two.wav", "dnf.wav" };
+            String[] fileNames = {"eight_seconds.wav", "go.wav", "plus_two.wav", "dnf.wav"};
             for (int i = 0; i < inspectionClips.length; i++) {
                 inspectionClips[i] = AudioSystem.getClip();
                 inspectionClips[i].open(
-                    AudioSystem.getAudioInputStream(
-                        MainFrame.class.getResourceAsStream("/inspection/" + fileNames[i])));
+                        AudioSystem.getAudioInputStream(
+                                MainFrame.class.getResourceAsStream("/inspection/" + fileNames[i])));
             }
 
             this.timerManager.addListener(new TimerManager.Listener() {
@@ -662,7 +670,7 @@ public class MainFrame extends JFrame {
 
                 @Override
                 public void inspectionRunning(long remainingTime) {
-                    int[] soundStartTimes = { 7000, 3000, 0, -2000, Integer.MIN_VALUE };
+                    int[] soundStartTimes = {7000, 3000, 0, -2000, Integer.MIN_VALUE};
                     if (remainingTime <= soundStartTimes[this.next]) {
                         inspectionClips[this.next].setFramePosition(0);
                         inspectionClips[this.next].start();
@@ -678,9 +686,9 @@ public class MainFrame extends JFrame {
             @Override
             public void categoriesUpdated(Category[] categories, Category currentCategory) {
                 setTitle(
-                    String.format(
-                        _("main.prisma_puzzle_time_category"),
-                        currentCategory.getDescription()));
+                        String.format(
+                                translate("main.prisma_puzzle_time_category"),
+                                currentCategory.getDescription()));
             }
         });
 
@@ -690,24 +698,24 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Date now = new Date();
                 Solution solution = new Solution(
-                    UUID.randomUUID(),
-                    MainFrame.this.categoryManager.getCurrentCategory().getCategoryId(),
-                    MainFrame.this.scrambleManager.getCurrentScramble(),
-                    new Timing(now, now),
-                    "");
+                        UUID.randomUUID(),
+                        MainFrame.this.categoryManager.getCurrentCategory().getCategoryId(),
+                        MainFrame.this.scrambleManager.getCurrentScramble(),
+                        new Timing(now, now),
+                        "");
 
-                SolutionEditingDialogListener listener =
-                    new SolutionEditingDialogListener() {
-                        @Override
-                        public void solutionEdited(Solution solution) {
-                            MainFrame.this.solutionManager.addSolution(solution);
-                            MainFrame.this.scrambleManager.changeScramble();
-                        }
-                    };
+                SolutionEditingDialogListener listener
+                        = new SolutionEditingDialogListener() {
+                            @Override
+                            public void solutionEdited(Solution solution) {
+                                MainFrame.this.solutionManager.addSolution(solution);
+                                MainFrame.this.scrambleManager.changeScramble();
+                            }
+                        };
 
-                SolutionEditingDialog solutionEditingDialog =
-                    new SolutionEditingDialog(MainFrame.this, true, solution, listener);
-                solutionEditingDialog.setTitle(_("main.add_solution_title"));
+                SolutionEditingDialog solutionEditingDialog
+                        = new SolutionEditingDialog(MainFrame.this, true, solution, listener);
+                solutionEditingDialog.setTitle(translate("main.add_solution_title"));
                 solutionEditingDialog.setLocationRelativeTo(null);
                 solutionEditingDialog.setVisible(true);
             }
@@ -762,7 +770,7 @@ public class MainFrame extends JFrame {
                 MainFrame.this.menuCategory.removeAll();
 
                 // category manager
-                JMenuItem menuItemCategoryManager = new JMenuItem(_("main.category_manager"));
+                JMenuItem menuItemCategoryManager = new JMenuItem(translate("main.category_manager"));
                 menuItemCategoryManager.setMnemonic(KeyEvent.VK_M);
                 menuItemCategoryManager.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, menuShortcutKey | InputEvent.ALT_MASK));
                 menuItemCategoryManager.addActionListener(new ActionListener() {
@@ -779,6 +787,7 @@ public class MainFrame extends JFrame {
 
                 // built-in categories
                 class BuiltInCategory {
+
                     public final Category category;
                     public final char mnemonic;
                     public final char accelerator;
@@ -807,8 +816,7 @@ public class MainFrame extends JFrame {
                     new BuiltInCategory(categories[13], 'P', 'P'),
                     new BuiltInCategory(categories[14], 'S', '1'),
                     new BuiltInCategory(categories[15], 'M', 'G'),
-                    new BuiltInCategory(categories[16], 'M', 'A'),
-                };
+                    new BuiltInCategory(categories[16], 'M', 'A'),};
 
                 for (final BuiltInCategory builtInCategory : builtInCategories) {
                     JRadioButtonMenuItem menuItemCategory = new JRadioButtonMenuItem(builtInCategory.category.getDescription());
@@ -861,7 +869,7 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MainFrame.this.timerManager.setInspectionEnabled(
-                    MainFrame.this.menuItemInspectionTime.isSelected());
+                        MainFrame.this.menuItemInspectionTime.isSelected());
             }
         });
 
@@ -891,8 +899,8 @@ public class MainFrame extends JFrame {
 
         // menuItemDevice
         for (final Mixer.Info mixerInfo : AudioSystem.getMixerInfo()) {
-            Line.Info[] targetLinesInfo =
-                AudioSystem.getTargetLineInfo(new Info(TargetDataLine.class, this.audioFormat));
+            Line.Info[] targetLinesInfo
+                    = AudioSystem.getTargetLineInfo(new Info(TargetDataLine.class, this.audioFormat));
 
             boolean validMixer = false;
             for (Line.Info lineInfo : targetLinesInfo) {
@@ -913,10 +921,10 @@ public class MainFrame extends JFrame {
                 public void actionPerformed(ActionEvent arg0) {
                     MainFrame.this.mixerInfo = mixerInfo;
                     MainFrame.this.configurationManager.setConfiguration(
-                        "STACKMAT-TIMER-INPUT-DEVICE", mixerInfo.getName());
+                            "STACKMAT-TIMER-INPUT-DEVICE", mixerInfo.getName());
 
-                    String timerTrigger =
-                        MainFrame.this.configurationManager.getConfiguration("TIMER-TRIGGER");
+                    String timerTrigger
+                            = MainFrame.this.configurationManager.getConfiguration("TIMER-TRIGGER");
                     if (timerTrigger.equals("STACKMAT-TIMER")) {
                         setTimerTrigger("STACKMAT-TIMER");
                     }
@@ -929,7 +937,7 @@ public class MainFrame extends JFrame {
                 menuItemDevice.setSelected(true);
                 MainFrame.this.mixerInfo = mixerInfo;
                 this.configurationManager.setConfiguration(
-                    "STACKMAT-TIMER-INPUT-DEVICE", mixerInfo.getName());
+                        "STACKMAT-TIMER-INPUT-DEVICE", mixerInfo.getName());
             }
         }
 
@@ -969,11 +977,11 @@ public class MainFrame extends JFrame {
         if (timerTriggerId.equals("KEYBOARD-TIMER-CONTROL")) {
             this.menuItemCtrlKeys.setSelected(true);
             this.timerManager.setTimer(
-                new ControlKeysTimer(this, this.timerManager));
+                    new ControlKeysTimer(this, this.timerManager));
         } else if (timerTriggerId.equals("KEYBOARD-TIMER-SPACE")) {
             this.menuItemSpaceKey.setSelected(true);
             this.timerManager.setTimer(
-                new SpaceKeyTimer(this, this.timerManager));
+                    new SpaceKeyTimer(this, this.timerManager));
         } else if (timerTriggerId.equals("STACKMAT-TIMER")) {
             if (this.mixerInfo != null) {
                 TargetDataLine targetDataLine = null;
@@ -982,26 +990,26 @@ public class MainFrame extends JFrame {
                     targetDataLine.open(MainFrame.this.audioFormat);
                     this.menuItemStackmatTimer.setSelected(true);
                     this.timerManager.setTimer(
-                        new StackmatTimer(targetDataLine, this.timerManager));
+                            new StackmatTimer(targetDataLine, this.timerManager));
                 } catch (LineUnavailableException e) {
                     // select the default timer
                     this.menuItemSpaceKey.setSelected(true);
                     this.timerManager.setTimer(
-                        new SpaceKeyTimer(this, this.timerManager));
+                            new SpaceKeyTimer(this, this.timerManager));
 
                     MainFrame.this.messageManager.enqueueMessage(
-                        MessageType.ERROR,
-                        _("main.stackmat_timer_error_message"));
+                            MessageType.ERROR,
+                            translate("main.stackmat_timer_error_message"));
                 }
             } else {
                 // select the default timer
                 this.menuItemSpaceKey.setSelected(true);
                 this.timerManager.setTimer(
-                    new SpaceKeyTimer(this, this.timerManager));
+                        new SpaceKeyTimer(this, this.timerManager));
 
                 MainFrame.this.messageManager.enqueueMessage(
-                    MessageType.ERROR,
-                    _("main.stackmat_timer_error_message"));
+                        MessageType.ERROR,
+                        translate("main.stackmat_timer_error_message"));
             }
         }
     }
@@ -1014,12 +1022,12 @@ public class MainFrame extends JFrame {
         setJMenuBar(menuBar);
 
         // menuFile
-        this.menuFile = new JMenu(_("main.file"));
+        this.menuFile = new JMenu(translate("main.file"));
         this.menuFile.setMnemonic(KeyEvent.VK_F);
         menuBar.add(this.menuFile);
 
         // menuItemAddSolution
-        this.menuItemAddSolution = new JMenuItem(_("main.add_solution"));
+        this.menuItemAddSolution = new JMenuItem(translate("main.add_solution"));
         this.menuItemAddSolution.setMnemonic(KeyEvent.VK_A);
         this.menuItemAddSolution.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, menuShortcutKey));
         this.menuFile.add(this.menuItemAddSolution);
@@ -1027,110 +1035,110 @@ public class MainFrame extends JFrame {
         this.menuFile.addSeparator();
 
         // menuItemExit
-        this.menuItemExit = new JMenuItem(_("main.exit"));
+        this.menuItemExit = new JMenuItem(translate("main.exit"));
         this.menuItemExit.setMnemonic(KeyEvent.VK_X);
         this.menuFile.add(this.menuItemExit);
 
         // menuView
-        JMenu menuView = new JMenu(_("main.view"));
+        JMenu menuView = new JMenu(translate("main.view"));
         menuView.setMnemonic(KeyEvent.VK_V);
         menuBar.add(menuView);
 
         // menuItemTips
-        this.menuItemTips = new JMenuItem(_("main.tips"));
+        this.menuItemTips = new JMenuItem(translate("main.tips"));
         this.menuItemTips.setMnemonic(KeyEvent.VK_T);
         this.menuItemTips.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, menuShortcutKey | KeyEvent.ALT_MASK));
         menuView.add(this.menuItemTips);
 
         // menuItemScrambleQueue
-        this.menuItemScrambleQueue = new JMenuItem(_("main.scramble_queue"));
+        this.menuItemScrambleQueue = new JMenuItem(translate("main.scramble_queue"));
         this.menuItemScrambleQueue.setMnemonic(KeyEvent.VK_Q);
         this.menuItemScrambleQueue.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, menuShortcutKey | KeyEvent.ALT_MASK));
         menuView.add(this.menuItemScrambleQueue);
 
         // menuItemHistory
-        this.menuItemHistory = new JMenuItem(_("main.history"));
+        this.menuItemHistory = new JMenuItem(translate("main.history"));
         this.menuItemHistory.setMnemonic(KeyEvent.VK_H);
         this.menuItemHistory.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, menuShortcutKey | KeyEvent.ALT_MASK));
         menuView.add(this.menuItemHistory);
 
         // menuItemSessionSummary
-        this.menuItemSessionSummary = new JMenuItem(_("main.session_summary"));
+        this.menuItemSessionSummary = new JMenuItem(translate("main.session_summary"));
         this.menuItemSessionSummary.setMnemonic(KeyEvent.VK_S);
         this.menuItemSessionSummary.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, menuShortcutKey | KeyEvent.ALT_MASK));
         menuView.add(this.menuItemSessionSummary);
 
         // menuCategory
-        this.menuCategory = new JMenu(_("main.category"));
+        this.menuCategory = new JMenu(translate("main.category"));
         this.menuCategory.setMnemonic(KeyEvent.VK_C);
         menuBar.add(this.menuCategory);
 
         // menuOptions
-        JMenu menuOptions = new JMenu(_("main.options"));
+        JMenu menuOptions = new JMenu(translate("main.options"));
         menuOptions.setMnemonic(KeyEvent.VK_O);
         menuBar.add(menuOptions);
 
         // menuColorScheme
-        this.menuItemColorScheme = new JMenuItem(_("main.color_scheme"));
+        this.menuItemColorScheme = new JMenuItem(translate("main.color_scheme"));
         this.menuItemColorScheme.setMnemonic(KeyEvent.VK_C);
         this.menuItemColorScheme.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, menuShortcutKey | KeyEvent.ALT_MASK));
         menuOptions.add(this.menuItemColorScheme);
 
         // menuItemInspectionTime
-        this.menuItemInspectionTime = new JCheckBoxMenuItem(_("main.inspection_time"));
+        this.menuItemInspectionTime = new JCheckBoxMenuItem(translate("main.inspection_time"));
         this.menuItemInspectionTime.setMnemonic(KeyEvent.VK_I);
         this.menuItemInspectionTime.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, menuShortcutKey | KeyEvent.ALT_MASK));
         menuOptions.add(this.menuItemInspectionTime);
 
         // menuTimerTrigger
-        JMenu menuTimerTrigger = new JMenu(_("main.timer_trigger"));
+        JMenu menuTimerTrigger = new JMenu(translate("main.timer_trigger"));
         menuTimerTrigger.setMnemonic(KeyEvent.VK_T);
         menuOptions.add(menuTimerTrigger);
         ButtonGroup timerTriggerGroup = new ButtonGroup();
 
         // menuItemCtrlKeys
-        this.menuItemCtrlKeys = new JRadioButtonMenuItem(_("main.ctrl_keys"));
+        this.menuItemCtrlKeys = new JRadioButtonMenuItem(translate("main.ctrl_keys"));
         this.menuItemCtrlKeys.setMnemonic(KeyEvent.VK_C);
         this.menuItemCtrlKeys.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, menuShortcutKey));
         menuTimerTrigger.add(this.menuItemCtrlKeys);
         timerTriggerGroup.add(this.menuItemCtrlKeys);
 
         // menuItemSpaceKey
-        this.menuItemSpaceKey = new JRadioButtonMenuItem(_("main.space_key"));
+        this.menuItemSpaceKey = new JRadioButtonMenuItem(translate("main.space_key"));
         this.menuItemSpaceKey.setMnemonic(KeyEvent.VK_S);
         this.menuItemSpaceKey.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, menuShortcutKey));
         menuTimerTrigger.add(this.menuItemSpaceKey);
         timerTriggerGroup.add(this.menuItemSpaceKey);
 
         // menuItemStackmatTimer
-        this.menuItemStackmatTimer = new JRadioButtonMenuItem(_("main.stackmat_timer"));
+        this.menuItemStackmatTimer = new JRadioButtonMenuItem(translate("main.stackmat_timer"));
         this.menuItemStackmatTimer.setMnemonic(KeyEvent.VK_T);
         this.menuItemStackmatTimer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, menuShortcutKey));
         menuTimerTrigger.add(this.menuItemStackmatTimer);
         timerTriggerGroup.add(this.menuItemStackmatTimer);
 
         // menuStackmatTimerInputDevice
-        this.stackmatTimerInputDevice = new JMenu(_("main.stackmat_timer_input_device"));
+        this.stackmatTimerInputDevice = new JMenu(translate("main.stackmat_timer_input_device"));
         menuTimerTrigger.setMnemonic(KeyEvent.VK_S);
         menuOptions.add(this.stackmatTimerInputDevice);
         this.stackmatTimerInputDeviceGroup = new ButtonGroup();
 
         //menuHelp
-        JMenu menuHelp = new JMenu(_("main.help"));
+        JMenu menuHelp = new JMenu(translate("main.help"));
         menuHelp.setMnemonic(KeyEvent.VK_H);
         menuBar.add(menuHelp);
 
         // menuItemAbout
-        this.menuItemAbout = new JMenuItem(_("main.about"));
+        this.menuItemAbout = new JMenuItem(translate("main.about"));
         this.menuItemAbout.setMnemonic(KeyEvent.VK_A);
         menuHelp.add(this.menuItemAbout);
 
         // panelMain
         JPanel panelMain = new JPanel(
-            new MigLayout(
-                "fill, hidemode 1, insets 2 3 2 3",
-                "[fill]",
-                "[pref!][pref!][fill, growprio 200][pref!]"));
+                new MigLayout(
+                        "fill, hidemode 1, insets 2 3 2 3",
+                        "[fill]",
+                        "[pref!][pref!][fill, growprio 200][pref!]"));
         add(panelMain);
 
         // labelMessage
@@ -1152,22 +1160,22 @@ public class MainFrame extends JFrame {
 
         // times scroll pane
         this.timesScrollPane = new TimesScrollPane(this.solutionManager, this.sessionManager);
-        this.timesScrollPane.setBorder(BorderFactory.createTitledBorder(_("main.times")));
+        this.timesScrollPane.setBorder(BorderFactory.createTitledBorder(translate("main.times")));
         this.timesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         panelMain.add(this.timesScrollPane, "w 30%, growy, gapright 0, split 3");
 
         // statistics panel
         this.statisticsPanel = new StatisticsPanel(this.sessionManager);
-        this.statisticsPanel.setBorder(BorderFactory.createTitledBorder(_("main.session_statistics")));
+        this.statisticsPanel.setBorder(BorderFactory.createTitledBorder(translate("main.session_statistics")));
         panelMain.add(this.statisticsPanel, "w 40%, growy, gapright 0");
 
         // scramble viewer panel
         this.scrambleViewerPanel = new ScrambleViewerPanel(
-            this.puzzleProvider,
-            this.colorManager,
-            this.scramblerProvider,
-            this.scrambleManager);
-        this.scrambleViewerPanel.setBorder(BorderFactory.createTitledBorder(_("main.scramble")));
+                this.puzzleProvider,
+                this.colorManager,
+                this.scramblerProvider,
+                this.scrambleManager);
+        this.scrambleViewerPanel.setBorder(BorderFactory.createTitledBorder(translate("main.scramble")));
         panelMain.add(this.scrambleViewerPanel, "w 30%, growy");
 
         this.scramblePanel.setScrambleViewerPanel(this.scrambleViewerPanel);
@@ -1176,54 +1184,54 @@ public class MainFrame extends JFrame {
 
         // tips frame
         this.tipsFrame = new TipsFrame(
-            this.puzzleProvider,
-            this.tipProvider,
-            this.scramblerProvider,
-            this.categoryManager,
-            this.scrambleManager);
+                this.puzzleProvider,
+                this.tipProvider,
+                this.scramblerProvider,
+                this.categoryManager,
+                this.scrambleManager);
         this.tipsFrame.setLocationRelativeTo(null);
         this.tipsFrame.setIconImage(icon);
 
         // scramble queue frame
         this.scrambleQueueFrame = new ScrambleQueueFrame(
-            this.scrambleParserProvider,
-            this.scramblerProvider,
-            this.categoryManager,
-            this.scrambleManager);
+                this.scrambleParserProvider,
+                this.scramblerProvider,
+                this.categoryManager,
+                this.scrambleManager);
         this.scrambleQueueFrame.setLocationRelativeTo(null);
         this.scrambleQueueFrame.setIconImage(icon);
 
         // history frame
         this.historyFrame = new HistoryFrame(
-            this.scramblerProvider,
-            this.scrambleParserProvider,
-            this.categoryManager,
-            this.scrambleManager,
-            this.solutionManager,
-            this.sessionManager);
+                this.scramblerProvider,
+                this.scrambleParserProvider,
+                this.categoryManager,
+                this.scrambleManager,
+                this.solutionManager,
+                this.sessionManager);
         this.historyFrame.setLocationRelativeTo(null);
         this.historyFrame.setIconImage(icon);
 
         // session summary frame
         this.sessionSummaryFrame = new SessionSummaryFrame(
-            this.categoryManager,
-            this.sessionManager);
+                this.categoryManager,
+                this.sessionManager);
         this.sessionSummaryFrame.setLocationRelativeTo(null);
         this.sessionSummaryFrame.setIconImage(icon);
 
         // category manager dialog
         this.categoryManagerDialog = new CategoryManagerFrame(
-            this.puzzleProvider,
-            this.scramblerProvider,
-            this.categoryManager,
-            this.tipProvider);
+                this.puzzleProvider,
+                this.scramblerProvider,
+                this.categoryManager,
+                this.tipProvider);
         this.categoryManagerDialog.setLocationRelativeTo(null);
         this.categoryManagerDialog.setIconImage(icon);
 
         // color scheme frame
         this.colorSchemeFrame = new ColorSchemeFrame(
-            this.puzzleProvider,
-            this.colorManager);
+                this.puzzleProvider,
+                this.colorManager);
         this.colorSchemeFrame.setLocationRelativeTo(null);
         this.colorSchemeFrame.setIconImage(icon);
     }

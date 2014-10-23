@@ -1,6 +1,6 @@
 package com.puzzletimer.tips;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class RubiksCubeM2Edges implements Tip {
 
     @Override
     public String getTipDescription() {
-        return _("tip.RUBIKS-CUBE-M2-EDGES");
+        return translate("tip.RUBIKS-CUBE-M2-EDGES");
     }
 
     @Override
@@ -95,7 +95,7 @@ public class RubiksCubeM2Edges implements Tip {
         // solution
         StringBuilder tip = new StringBuilder();
 
-        tip.append(_("tip.RUBIKS-CUBE-M2-EDGES") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-M2-EDGES") + ":\n");
 
         HashMap<String, String> letteringScheme = new HashMap<String, String>();
         letteringScheme.put("UB", "A");

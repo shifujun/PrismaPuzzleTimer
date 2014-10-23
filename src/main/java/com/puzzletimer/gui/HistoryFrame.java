@@ -1,6 +1,6 @@
 package com.puzzletimer.gui;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -78,7 +78,7 @@ public class HistoryFrame extends JFrame {
                 final SolutionImporterListener listener) {
             super(owner, modal);
 
-            setTitle(_("solution_importer.solution_importer"));
+            setTitle(translate("solution_importer.solution_importer"));
             setMinimumSize(new Dimension(640, 480));
             setPreferredSize(getMinimumSize());
 
@@ -167,19 +167,19 @@ public class HistoryFrame extends JFrame {
                     "[pref!][fill]16[pref!]"));
 
             // labelSolutions
-            add(new JLabel(_("solution_importer.solutions")), "wrap");
+            add(new JLabel(translate("solution_importer.solutions")), "wrap");
 
             // textAreaContents
-            this.textAreaContents = new JTextArea(_("solution_importer.default_contents"));
+            this.textAreaContents = new JTextArea(translate("solution_importer.default_contents"));
             JScrollPane scrollPane = new JScrollPane(this.textAreaContents);
             add(scrollPane, "growx, wrap");
 
             // buttonOk
-            this.buttonOk = new JButton(_("solution_importer.ok"));
+            this.buttonOk = new JButton(translate("solution_importer.ok"));
             add(this.buttonOk, "right, width 100, span 2, split");
 
             // buttonCancel
-            this.buttonCancel = new JButton(_("solution_importer.cancel"));
+            this.buttonCancel = new JButton(translate("solution_importer.cancel"));
             add(this.buttonCancel, "width 100");
         }
     }
@@ -235,7 +235,7 @@ public class HistoryFrame extends JFrame {
             public void categoriesUpdated(Category[] categories, Category currentCategory) {
                 setTitle(
                     String.format(
-                        _("history.history_category"),
+                        translate("history.history_category"),
                         currentCategory.getDescription()));
             }
         });
@@ -355,8 +355,8 @@ public class HistoryFrame extends JFrame {
                 if (HistoryFrame.this.table.getSelectedRows().length > 5) {
                     int result = JOptionPane.showConfirmDialog(
                         HistoryFrame.this,
-                        _("history.solution_removal_confirmation_message"),
-                        _("history.remove_solutions"),
+                        translate("history.solution_removal_confirmation_message"),
+                        translate("history.remove_solutions"),
                         JOptionPane.YES_NO_CANCEL_OPTION);
                     if (result != JOptionPane.YES_OPTION) {
                         return;
@@ -438,21 +438,21 @@ public class HistoryFrame extends JFrame {
                 "[pref!][pref!]12[pref!][pref!]12[pref!][pref!]12[pref!][]16[pref!]"));
 
         // labelHistogram
-        add(new JLabel(_("history.histogram")), "span, wrap");
+        add(new JLabel(translate("history.histogram")), "span, wrap");
 
         // histogram
         this.histogramPanel = new HistogramPanel(new Solution[0], 17);
         add(this.histogramPanel, "growx, height 90, span, wrap");
 
         // labelGraph
-        add(new JLabel(_("history.graph")), "span, wrap");
+        add(new JLabel(translate("history.graph")), "span, wrap");
 
         // Graph
         this.graphPanel = new GraphPanel(new Solution[0]);
         add(this.graphPanel, "growx, height 90, span, wrap");
 
         // labelStatistics
-        add(new JLabel(_("history.statistics")), "span, wrap");
+        add(new JLabel(translate("history.statistics")), "span, wrap");
 
         // panelStatistics
         JPanel panelStatistics = new JPanel(
@@ -463,107 +463,107 @@ public class HistoryFrame extends JFrame {
         add(panelStatistics, "growx, span, wrap");
 
         // labelNumberOfSolutions
-        panelStatistics.add(new JLabel(_("history.number_of_solutions")), "");
+        panelStatistics.add(new JLabel(translate("history.number_of_solutions")), "");
         this.labelNumberOfSolutions = new JLabel("");
         panelStatistics.add(this.labelNumberOfSolutions, "right");
 
         // labelBest
-        panelStatistics.add(new JLabel(_("history.best")), "");
+        panelStatistics.add(new JLabel(translate("history.best")), "");
         this.labelBest = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelBest, "right");
 
         // labelMeanOf3
-        panelStatistics.add(new JLabel(_("history.mean_of_3")), "");
+        panelStatistics.add(new JLabel(translate("history.mean_of_3")), "");
         this.labelMeanOf3 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelMeanOf3, "right");
 
         // labelBestMeanOf3
-        panelStatistics.add(new JLabel(_("history.best_mean_of_3")), "");
+        panelStatistics.add(new JLabel(translate("history.best_mean_of_3")), "");
         this.labelBestMeanOf3 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelBestMeanOf3, "right, wrap");
 
         // labelMean
-        panelStatistics.add(new JLabel(_("history.mean")), "");
+        panelStatistics.add(new JLabel(translate("history.mean")), "");
         this.labelMean = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelMean, "right");
 
         // labelLowerQuartile
-        panelStatistics.add(new JLabel(_("history.lower_quartile")), "");
+        panelStatistics.add(new JLabel(translate("history.lower_quartile")), "");
         this.labelLowerQuartile = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelLowerQuartile, "right");
 
         // labelMeanOf10
-        panelStatistics.add(new JLabel(_("history.mean_of_10")), "");
+        panelStatistics.add(new JLabel(translate("history.mean_of_10")), "");
         this.labelMeanOf10 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelMeanOf10, "right");
 
         // labelBestMeanOf10
-        panelStatistics.add(new JLabel(_("history.best_mean_of_10")), "");
+        panelStatistics.add(new JLabel(translate("history.best_mean_of_10")), "");
         this.labelBestMeanOf10 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelBestMeanOf10, "right, wrap");
 
         // labelAverage
-        panelStatistics.add(new JLabel(_("history.average")), "");
+        panelStatistics.add(new JLabel(translate("history.average")), "");
         this.labelAverage = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelAverage, "right");
 
         // labelMedian
-        panelStatistics.add(new JLabel(_("history.median")), "");
+        panelStatistics.add(new JLabel(translate("history.median")), "");
         this.labelMedian = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelMedian, "right");
 
         // labelMeanOf100
-        panelStatistics.add(new JLabel(_("history.mean_of_100")), "");
+        panelStatistics.add(new JLabel(translate("history.mean_of_100")), "");
         this.labelMeanOf100 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelMeanOf100, "right");
 
         // labelBestMeanOf100
-        panelStatistics.add(new JLabel(_("history.best_mean_of_100")), "");
+        panelStatistics.add(new JLabel(translate("history.best_mean_of_100")), "");
         this.labelBestMeanOf100 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelBestMeanOf100, "right, wrap");
 
         // labelInterquartileMean
-        panelStatistics.add(new JLabel(_("history.interquartile_mean")), "");
+        panelStatistics.add(new JLabel(translate("history.interquartile_mean")), "");
         this.labelInterquartileMean = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelInterquartileMean, "right");
 
         // labelUpperQuartile
-        panelStatistics.add(new JLabel(_("history.upper_quartile")), "");
+        panelStatistics.add(new JLabel(translate("history.upper_quartile")), "");
         this.labelUpperQuartile = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelUpperQuartile, "right");
 
         // labelAverageOf5
-        panelStatistics.add(new JLabel(_("history.average_of_5")), "");
+        panelStatistics.add(new JLabel(translate("history.average_of_5")), "");
         this.labelAverageOf5 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelAverageOf5, "right");
 
         // labelBestAverageOf5
-        panelStatistics.add(new JLabel(_("history.best_average_of_5")), "");
+        panelStatistics.add(new JLabel(translate("history.best_average_of_5")), "");
         this.labelBestAverageOf5 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelBestAverageOf5, "right, wrap");
 
         // labelStandardDeviation
-        panelStatistics.add(new JLabel(_("history.standard_deviation")), "");
+        panelStatistics.add(new JLabel(translate("history.standard_deviation")), "");
         this.labelStandardDeviation = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelStandardDeviation, "right");
 
         // labelWorst
-        panelStatistics.add(new JLabel(_("history.worst")), "");
+        panelStatistics.add(new JLabel(translate("history.worst")), "");
         this.labelWorst = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelWorst, "right");
 
         // labelAverageOf12
-        panelStatistics.add(new JLabel(_("history.average_of_12")), "");
+        panelStatistics.add(new JLabel(translate("history.average_of_12")), "");
         this.labelAverageOf12 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelAverageOf12, "right");
 
         // labelBestAverageOf12
-        panelStatistics.add(new JLabel(_("history.best_average_of_12")), "");
+        panelStatistics.add(new JLabel(translate("history.best_average_of_12")), "");
         this.labelBestAverageOf12 = new JLabel("XX:XX.XX");
         panelStatistics.add(this.labelBestAverageOf12, "right");
 
         // labelSolutions
-        JLabel labelTimes = new JLabel(_("history.solutions"));
+        JLabel labelTimes = new JLabel(translate("history.solutions"));
         add(labelTimes, "span, wrap");
 
         // table
@@ -575,29 +575,29 @@ public class HistoryFrame extends JFrame {
         add(scrollPane, "grow");
 
         // buttonAddSolutions
-        this.buttonAddSolutions = new JButton(_("history.add_solutions"));
+        this.buttonAddSolutions = new JButton(translate("history.add_solutions"));
         add(this.buttonAddSolutions, "growx, top, split 5, flowy");
 
         // buttonEdit
-        this.buttonEdit = new JButton(_("history.edit"));
+        this.buttonEdit = new JButton(translate("history.edit"));
         this.buttonEdit.setEnabled(false);
         add(this.buttonEdit, "growx, top");
 
         // buttonRemove
-        this.buttonRemove = new JButton(_("history.remove"));
+        this.buttonRemove = new JButton(translate("history.remove"));
         this.buttonRemove.setEnabled(false);
         add(this.buttonRemove, "growx, top");
 
         // buttonSelectSession
-        this.buttonSelectSession = new JButton(_("history.select_session"));
+        this.buttonSelectSession = new JButton(translate("history.select_session"));
         add(this.buttonSelectSession, "growx, top, gaptop 16");
 
         // buttonSelectNone
-        this.buttonSelectNone = new JButton(_("history.select_none"));
+        this.buttonSelectNone = new JButton(translate("history.select_none"));
         add(this.buttonSelectNone, "growx, top, wrap");
 
         // buttonOk
-        this.buttonOk = new JButton(_("history.ok"));
+        this.buttonOk = new JButton(translate("history.ok"));
         add(this.buttonOk, "tag ok, span");
     }
 
@@ -739,11 +739,11 @@ public class HistoryFrame extends JFrame {
                 return false;
             }
         };
-        tableModel.addColumn(_("history.#"));
-        tableModel.addColumn(_("history.start"));
-        tableModel.addColumn(_("history.time"));
-        tableModel.addColumn(_("history.penalty"));
-        tableModel.addColumn(_("history.scramble"));
+        tableModel.addColumn(translate("history.#"));
+        tableModel.addColumn(translate("history.start"));
+        tableModel.addColumn(translate("history.time"));
+        tableModel.addColumn(translate("history.penalty"));
+        tableModel.addColumn(translate("history.scramble"));
 
         this.table.setModel(tableModel);
 

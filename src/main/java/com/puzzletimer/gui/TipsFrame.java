@@ -1,6 +1,6 @@
 package com.puzzletimer.gui;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -53,7 +53,7 @@ public class TipsFrame extends JFrame {
                 Puzzle puzzle = puzzleProvider.get(scrambler.getScramblerInfo().getPuzzleId());
                 setTitle(
                     String.format(
-                        _("tips.tips_category"),
+                        translate("tips.tips_category"),
                         puzzle.getPuzzleInfo().getDescription()));
             }
         });
@@ -105,7 +105,7 @@ public class TipsFrame extends JFrame {
                 "[pref!][]16[pref!]"));
 
         // labelTips
-        add(new JLabel(_("tips.tips")), "wrap");
+        add(new JLabel(translate("tips.tips")), "wrap");
 
         // textAreaContents
         this.textAreaTips = new JTextArea();
@@ -113,7 +113,7 @@ public class TipsFrame extends JFrame {
         add(scrollPane, "grow, wrap");
 
         // buttonOk
-        this.buttonOk = new JButton(_("tips.ok"));
+        this.buttonOk = new JButton(translate("tips.ok"));
         add(this.buttonOk, "tag ok");
     }
 }

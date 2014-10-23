@@ -73,7 +73,7 @@ public class WrapLayout implements LayoutManager {
                 int w = (int) component.getPreferredSize().getWidth();
                 int h = (int) component.getPreferredSize().getHeight();
 
-                if (x + w + insets.right > maxWidth) {
+                if (x + w + insets.right > maxWidth ) {
                     int d = (maxWidth - (x - this.xGap) - insets.right) / 2;
                     for (int j = firstComponent; j < i; j++) {
                         Component c = target.getComponent(j);

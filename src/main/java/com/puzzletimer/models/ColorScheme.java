@@ -1,6 +1,6 @@
 package com.puzzletimer.models;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.awt.Color;
 
@@ -27,7 +27,7 @@ public class ColorScheme {
         }
 
         public String getFaceDescription() {
-            return _("face." + this.puzzleId + "." + this.faceId);
+            return translate("face." + this.puzzleId + "." + this.faceId);
         }
 
         public Color getDefaultColor() {

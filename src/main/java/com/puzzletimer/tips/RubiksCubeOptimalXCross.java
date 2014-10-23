@@ -1,6 +1,6 @@
 package com.puzzletimer.tips;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.util.ArrayList;
 
@@ -46,7 +46,7 @@ public class RubiksCubeOptimalXCross implements Tip {
 
     @Override
     public String getTipDescription() {
-        return _("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS");
+        return translate("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS");
     }
 
     @Override
@@ -58,41 +58,41 @@ public class RubiksCubeOptimalXCross implements Tip {
         // x-cross on U
         State stateU =
             x.multiply(x).multiply(state).multiply(x).multiply(x);
-        tip.append(_("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_u") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_u") + ":\n");
         tip.append(getOptimalSolutions(stateU, "x2 "));
         tip.append("\n");
 
         // x-cross on D
         State stateD = state;
-        tip.append(_("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_d") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_d") + ":\n");
         tip.append(getOptimalSolutions(stateD, ""));
         tip.append("\n");
 
         // x-cross on L
         State stateL =
             z.multiply(state).multiply(z).multiply(z).multiply(z);
-        tip.append(_("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_l") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_l") + ":\n");
         tip.append(getOptimalSolutions(stateL, "z' "));
         tip.append("\n");
 
         // x-cross on R
         State stateR =
             z.multiply(z).multiply(z).multiply(state).multiply(z);
-        tip.append(_("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_r") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_r") + ":\n");
         tip.append(getOptimalSolutions(stateR, "z "));
         tip.append("\n");
 
         // x-cross on F
         State stateF =
             x.multiply(state).multiply(x).multiply(x).multiply(x);
-        tip.append(_("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_f") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_f") + ":\n");
         tip.append(getOptimalSolutions(stateF, "x' "));
         tip.append("\n");
 
         // x-cross on B
         State stateB =
             x.multiply(x).multiply(x).multiply(state).multiply(x);
-        tip.append(_("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_b") + ":\n");
+        tip.append(translate("tip.RUBIKS-CUBE-OPTIMAL-X-CROSS.optimal_x_cross_on_b") + ":\n");
         tip.append(getOptimalSolutions(stateB, "x "));
         tip.append("\n");
 

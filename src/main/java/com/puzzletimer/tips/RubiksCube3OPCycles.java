@@ -1,6 +1,6 @@
 package com.puzzletimer.tips;
 
-import static com.puzzletimer.Internationalization._;
+import static com.puzzletimer.Internationalization.translate;
 
 import java.util.ArrayList;
 
@@ -20,14 +20,14 @@ public class RubiksCube3OPCycles implements Tip {
 
     @Override
     public String getTipDescription() {
-        return _("tip.RUBIKS-CUBE-3OP-CYCLES");
+        return translate("tip.RUBIKS-CUBE-3OP-CYCLES");
     }
 
     @Override
     public String getTip(Scramble scramble) {
         StringBuilder tip = new StringBuilder();
 
-        tip.append(_("tip.RUBIKS-CUBE-3OP-CYCLES") + ":\n  ");
+        tip.append(translate("tip.RUBIKS-CUBE-3OP-CYCLES") + ":\n  ");
 
         RubiksCubeSolver.State cubeState =
             RubiksCubeSolver.State.id.applySequence(scramble.getSequence());
