@@ -13,16 +13,42 @@
             <comments>License of Prisma Puzzle Timer 0.6</comments>
         </license>
     </licenses>
+    <build>
+        <plugins>  
+            <plugin>  
+                <artifactId>maven-assembly-plugin</artifactId>  
+                <configuration>  
+                    <descriptorRefs>  
+                        <descriptorRef>jar-with-dependencies</descriptorRef>  
+                    </descriptorRefs>  
+                    <archive>  
+                        <manifest>  
+                            <mainClass>com.puzzletimer.Main</mainClass>  
+                        </manifest>  
+                    </archive>
+                </configuration>  
+                <executions>  
+                    <execution>  
+                        <id>make-assembly</id>  
+                        <phase>package</phase>  
+                        <goals>  
+                            <goal>single</goal>  
+                        </goals>  
+                    </execution>  
+                </executions>  
+            </plugin>  
+        </plugins>  
+    </build>
     <dependencies>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.2.137</version>
-        </dependency>
         <dependency>
             <groupId>org.ow2.chameleon.commons.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
             <version>3.7.3.1-0000</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.2.137</version>
         </dependency>
     </dependencies>
     <properties>
@@ -30,4 +56,5 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
+
 </project>
