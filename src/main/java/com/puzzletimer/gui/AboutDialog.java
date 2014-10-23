@@ -54,7 +54,7 @@ public class AboutDialog extends JDialog {
 
         // labelPrismaPuzzleTimer
         JLabel labelPrismaPuzzleTimer = new JLabel(translate("about.prisma_puzzle_timer_version"));
-        labelPrismaPuzzleTimer.setFont(new Font("Arial", Font.BOLD, 16));
+        labelPrismaPuzzleTimer.setFont(new Font(translate("font.arial"), Font.BOLD, 16));
         add(labelPrismaPuzzleTimer, "split 3, gapbottom 10, flowy");
 
         // labelURL

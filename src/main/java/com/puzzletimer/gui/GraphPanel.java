@@ -1,5 +1,8 @@
 package com.puzzletimer.gui;
 
+import static com.puzzletimer.Internationalization.translate;
+import com.puzzletimer.models.Solution;
+import com.puzzletimer.util.SolutionUtils;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,11 +12,7 @@ import java.awt.RenderingHints;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.swing.JPanel;
-
-import com.puzzletimer.models.Solution;
-import com.puzzletimer.util.SolutionUtils;
 
 @SuppressWarnings("serial")
 public class GraphPanel extends JPanel {
@@ -95,7 +94,7 @@ public class GraphPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-        g2.setFont(new Font("Arial", Font.BOLD, 10));
+        g2.setFont(new Font(translate("font.arial"), Font.BOLD, 10));
 
         int hBase = 16;
         int wBase = 45;

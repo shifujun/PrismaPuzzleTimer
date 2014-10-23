@@ -116,7 +116,7 @@ public class MainFrame extends JFrame {
             final JLabel[] labels = new JLabel[scramble.getSequence().length];
             for (int i = 0; i < labels.length; i++) {
                 labels[i] = new JLabel(scramble.getSequence()[i]);
-                labels[i].setFont(new Font("Arial", Font.PLAIN, 28));
+                labels[i].setFont(new Font(translate("font.arial"), Font.PLAIN, 28));
                 labels[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 
                 final int index = i;
@@ -229,7 +229,7 @@ public class MainFrame extends JFrame {
 
             // timeLabel
             this.timeLabel = new TimeLabel("00:00.00");
-            this.timeLabel.setFont(new Font("Arial", Font.BOLD, 108));
+            this.timeLabel.setFont(new Font(translate("font.arial"), Font.BOLD, 108));
             add(this.timeLabel, "grow");
 
             // rightHand
@@ -276,15 +276,15 @@ public class MainFrame extends JFrame {
                 final Solution solution = solutions[i];
 
                 JLabel labelIndex = new JLabel(Integer.toString(solutions.length - i) + ".");
-                labelIndex.setFont(new Font("Tahoma", Font.BOLD, 13));
+                labelIndex.setFont(new Font(translate("font.tahoma"), Font.BOLD, 13));
                 this.panel.add(labelIndex);
 
                 JLabel labelTime = new JLabel(SolutionUtils.formatMinutes(solutions[i].getTiming().getElapsedTime()));
-                labelTime.setFont(new Font("Tahoma", Font.PLAIN, 13));
+                labelTime.setFont(new Font(translate("font.tahoma"), Font.PLAIN, 13));
                 this.panel.add(labelTime);
 
                 final JLabel labelPlus2 = new JLabel("+2");
-                labelPlus2.setFont(new Font("Tahoma", Font.PLAIN, 13));
+                labelPlus2.setFont(new Font(translate("font.tahoma"), Font.PLAIN, 13));
                 if (!solution.getPenalty().equals("+2")) {
                     labelPlus2.setForeground(Color.LIGHT_GRAY);
                 }
@@ -304,7 +304,7 @@ public class MainFrame extends JFrame {
                 this.panel.add(labelPlus2);
 
                 final JLabel labelDNF = new JLabel("DNF");
-                labelDNF.setFont(new Font("Tahoma", Font.PLAIN, 13));
+                labelDNF.setFont(new Font(translate("font.tahoma"), Font.PLAIN, 13));
                 if (!solution.getPenalty().equals("DNF")) {
                     labelDNF.setForeground(Color.LIGHT_GRAY);
                 }
@@ -416,7 +416,7 @@ public class MainFrame extends JFrame {
 
             // labelMean
             JLabel labelMeanDescription = new JLabel(translate("statistics.mean"));
-            labelMeanDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelMeanDescription.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelMeanDescription);
 
             this.labelMean = new JLabel("XX:XX.XX");
@@ -424,7 +424,7 @@ public class MainFrame extends JFrame {
 
             // labelAverage
             JLabel labelAverageDescription = new JLabel(translate("statistics.average"));
-            labelAverageDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelAverageDescription.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelAverageDescription);
 
             this.labelAverage = new JLabel("XX:XX.XX");
@@ -432,7 +432,7 @@ public class MainFrame extends JFrame {
 
             // labelBestTime
             JLabel labelBestTimeDescription = new JLabel(translate("statistics.best_time"));
-            labelBestTimeDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelBestTimeDescription.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelBestTimeDescription);
 
             this.labelBestTime = new JLabel("XX:XX.XX");
@@ -440,7 +440,7 @@ public class MainFrame extends JFrame {
 
             // labelMedian
             JLabel labelMedianDescription = new JLabel(translate("statistics.median"));
-            labelMedianDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelMedianDescription.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelMedianDescription);
 
             this.labelMedian = new JLabel("XX:XX.XX");
@@ -448,7 +448,7 @@ public class MainFrame extends JFrame {
 
             // labelWorstTime
             JLabel labelWorstTimeDescription = new JLabel(translate("statistics.worst_time"));
-            labelWorstTimeDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelWorstTimeDescription.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelWorstTimeDescription);
 
             this.labelWorstTime = new JLabel("XX:XX.XX");
@@ -456,7 +456,7 @@ public class MainFrame extends JFrame {
 
             // labelStandardDeviation
             JLabel labelStandardDeviationDescription = new JLabel(translate("statistics.standard_deviation"));
-            labelStandardDeviationDescription.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelStandardDeviationDescription.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelStandardDeviationDescription);
 
             this.labelStandardDeviation = new JLabel("XX:XX.XX");
@@ -464,7 +464,7 @@ public class MainFrame extends JFrame {
 
             // labelMeanOf3
             JLabel labelMeanOf3Description = new JLabel(translate("statistics.mean_of_3"));
-            labelMeanOf3Description.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelMeanOf3Description.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelMeanOf3Description);
 
             this.labelMeanOf3 = new JLabel("XX:XX.XX");
@@ -472,7 +472,7 @@ public class MainFrame extends JFrame {
 
             // labelBestMeanOf3
             JLabel labelBestMeanOf3Description = new JLabel(translate("statistics.best_mean_of_3"));
-            labelBestMeanOf3Description.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelBestMeanOf3Description.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelBestMeanOf3Description);
 
             this.labelBestMeanOf3 = new JLabel("XX:XX.XX");
@@ -480,7 +480,7 @@ public class MainFrame extends JFrame {
 
             // labelAverageOf5
             JLabel labelAverageOf5Description = new JLabel(translate("statistics.average_of_5"));
-            labelAverageOf5Description.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelAverageOf5Description.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelAverageOf5Description);
 
             this.labelAverageOf5 = new JLabel("XX:XX.XX");
@@ -488,7 +488,7 @@ public class MainFrame extends JFrame {
 
             // labelBestAverageOf5
             JLabel labelBestAverageOf5Description = new JLabel(translate("statistics.best_average_of_5"));
-            labelBestAverageOf5Description.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelBestAverageOf5Description.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelBestAverageOf5Description);
 
             this.labelBestAverageOf5 = new JLabel("XX:XX.XX");
@@ -496,7 +496,7 @@ public class MainFrame extends JFrame {
 
             // labelAverageOf12
             JLabel labelAverageOf12Description = new JLabel(translate("statistics.average_of_12"));
-            labelAverageOf12Description.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelAverageOf12Description.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelAverageOf12Description);
 
             this.labelAverageOf12 = new JLabel("XX:XX.XX");
@@ -504,7 +504,7 @@ public class MainFrame extends JFrame {
 
             // labelBestAverageOf12
             JLabel labelBestAverageOf12Description = new JLabel(translate("statistics.best_average_of_12"));
-            labelBestAverageOf12Description.setFont(new Font("Tahoma", Font.BOLD, 11));
+            labelBestAverageOf12Description.setFont(new Font(translate("font.tahoma"), Font.BOLD, 11));
             add(labelBestAverageOf12Description);
 
             this.labelBestAverageOf12 = new JLabel("XX:XX.XX");
